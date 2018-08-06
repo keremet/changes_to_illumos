@@ -1,0 +1,38 @@
+diff --git a/usr/src/cmd/dfs.cmds/sharemgr/group.xml b/usr/src/cmd/dfs.cmds/sharemgr/group.xml
+index 3b6a4eb..422f1ad 100644
+--- a/usr/src/cmd/dfs.cmds/sharemgr/group.xml
++++ b/usr/src/cmd/dfs.cmds/sharemgr/group.xml
+@@ -40,7 +40,7 @@
+ 	type='service'
+ 	version='1'>
+ 
+-	<create_default_instance enabled='true' />
++	<create_default_instance enabled='false' />
+ 
+ 	<!-- Must have all local filesystems mounted before we share them -->
+ 	<dependency name='filesystem-local'
+diff --git a/usr/src/cmd/dumpadm/dumpadm.xml b/usr/src/cmd/dumpadm/dumpadm.xml
+index 367a92a..6c48f41 100644
+--- a/usr/src/cmd/dumpadm/dumpadm.xml
++++ b/usr/src/cmd/dumpadm/dumpadm.xml
+@@ -37,7 +37,7 @@
+ 	type='service'
+ 	version='1'>
+ 
+-	<create_default_instance enabled='true' />
++	<create_default_instance enabled='false' />
+ 
+ 	<single_instance />
+ 
+diff --git a/usr/src/cmd/fm/fmd/common/fmd.xml b/usr/src/cmd/fm/fmd/common/fmd.xml
+index e03bdc0..e1d2e36 100644
+--- a/usr/src/cmd/fm/fmd/common/fmd.xml
++++ b/usr/src/cmd/fm/fmd/common/fmd.xml
+@@ -35,7 +35,7 @@
+ 	type='service'
+ 	version='1'>
+ 
+-	<create_default_instance enabled='true' />
++	<create_default_instance enabled='false' />
+ 
+ 	<single_instance />

@@ -1,0 +1,45 @@
+diff --git a/usr/src/cmd/svc/milestone/Makefile b/usr/src/cmd/svc/milestone/Makefile
+index 901727d..99ba4b4 100644
+--- a/usr/src/cmd/svc/milestone/Makefile
++++ b/usr/src/cmd/svc/milestone/Makefile
+@@ -100,7 +100,6 @@ MANIFEST= $(FSSVCS) $(NETSVCS) $(MAINMILESTONES) $(SYSTEMSVCS) \
+ 
+ SVCMETHOD=\
+ 	boot-archive \
+-	console-login \
+ 	devices-audio \
+ 	devices-local \
+ 	fs-local \
+diff --git a/usr/src/cmd/svc/milestone/console-login b/usr/src/cmd/svc/milestone/console-login
+deleted file mode 100644
+index ae19127..0000000
+--- a/usr/src/cmd/svc/milestone/console-login
++++ /dev/null
+@@ -1,2 +0,0 @@
+-#!/sbin/sh
+-exec /usr/lib/saf/ttymon -g -d /dev/console -l console -m ldterm,ttcompat -h -p "Login: "
+diff --git a/usr/src/cmd/svc/milestone/make-console-login-xml b/usr/src/cmd/svc/milestone/make-console-login-xml
+index a8e516f..42d054b 100644
+--- a/usr/src/cmd/svc/milestone/make-console-login-xml
++++ b/usr/src/cmd/svc/milestone/make-console-login-xml
+@@ -86,7 +86,7 @@ cat >console-login.xml <<EOF
+ 	<exec_method
+ 		type='method'
+ 		name='start'
+-		exec='/lib/svc/method/console-login %i'
++		exec='/usr/lib/saf/ttymon -g -d /dev/console -l console -m ldterm,ttcompat -h -p "Login: "'
+ 		timeout_seconds='0'>
+                 <method_context>
+                         <method_credential user='root' group='root' />
+diff --git a/usr/src/pkg/manifests/SUNWcs.mf b/usr/src/pkg/manifests/SUNWcs.mf
+index 97bbe88..f0494a2 100644
+--- a/usr/src/pkg/manifests/SUNWcs.mf
++++ b/usr/src/pkg/manifests/SUNWcs.mf
+@@ -564,7 +564,6 @@ file path=lib/svc/manifest/system/utmp.xml group=sys mode=0444
+ file path=lib/svc/manifest/system/vtdaemon.xml group=sys mode=0444
+ file path=lib/svc/method/boot-archive mode=0555
+ file path=lib/svc/method/boot-archive-update mode=0555
+-file path=lib/svc/method/console-login mode=0555
+ file path=lib/svc/method/devices-audio mode=0555
+ file path=lib/svc/method/devices-local mode=0555
+ file path=lib/svc/method/dns-install mode=0555
