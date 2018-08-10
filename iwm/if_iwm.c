@@ -9,6 +9,7 @@
 
 #define IWM_SUCCESS	0
 
+#define PCI_CFG_RETRY_TIMEOUT	0x41
 
 static void *iwm_state = NULL;
 
@@ -179,6 +180,15 @@ iwm_attach(dev_info_t *dip, ddi_attach_cmd_t cmd)
 
 	sc->sc_dip = dip;
 
+	if (pci_config_setup(dip, &sc->sc_pcih) != DDI_SUCCESS) {
+		dev_err(sc->sc_dip, CE_WARN, "!pci_config_setup() failed");
+		goto fail_pci_config;
+	}
+
+	/* Clear device-specific "PCI retry timeout" register (41h). */
+	uint32_t reg = pci_config_get8(sc->sc_pcih, PCI_CFG_RETRY_TIMEOUT);
+	if (reg)
+		pci_config_put8(sc->sc_pcih, PCI_CFG_RETRY_TIMEOUT, 0);
 	/*
 	 * Initialize pointer to device specific functions
 	 */
@@ -250,6 +260,9 @@ fail_pci_config:
 static int
 iwm_detach(dev_info_t *dip, ddi_detach_cmd_t cmd)
 {
+	struct iwm_softc *sc = ddi_get_driver_private(dip);
+	ieee80211com_t *ic = &sc->sc_ic;
+
 	cmn_err(CE_NOTE, "iwm_detach entered");
 	switch (cmd) {
 	case DDI_DETACH:
@@ -257,6 +270,16 @@ iwm_detach(dev_info_t *dip, ddi_detach_cmd_t cmd)
 	default:
 		return (DDI_FAILURE);
 	}
+	
+	int error = mac_disable(ic->ic_mach);
+	if (error != DDI_SUCCESS)
+		return (error);
+	mac_unregister(ic->ic_mach);
+//	ieee80211_detach(ic);
+
+	pci_config_teardown(&sc->sc_pcih);
+	ddi_remove_minor_node(dip, NULL);
+	ddi_soft_state_free(iwm_state, ddi_get_instance(dip));
 	return (DDI_SUCCESS);
 }
 /*
